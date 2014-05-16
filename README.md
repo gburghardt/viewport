@@ -142,6 +142,45 @@ The Viewport methods come with several overloads:
 4. `Viewport#querySelector(selector) -> HTMLElement | null`: Find the first
    matching element inside the viewport
 
+Example:
+
+```javascript
+function ImageLoader(viewport) {
+    this.viewport = viewport || null;
+    this.handleScrollComplete = this.handleScrollComplete.bind(this);
+}
+ImageLoader.prototype = {
+
+    fullsizeAttr: "data-fullsize-url",
+
+    selector: "img[data-fullsize-url]",
+
+    thumbnailAttr: "data-thumbnail-url",
+
+    viewport: null,
+
+    constructor: ImageLoader,
+
+    init: function() {
+        this.viewport.addEventListener("scroll:complete", this.handleScrollComplete);
+
+        return this;
+    },
+
+    handleScrollComplete: function(viewport) {
+        viewport.querySelectorAll(this.selector, function(image, index, thisViewport) {
+            image.setAttribute(this.thumbnailAttr, image.src);
+            image.src = image.getAttribute(this.fullsizeAttr);
+            image.removeAttribute(this.fullsizeAttr);
+        }, this);
+    }
+
+};
+
+var viewport = new Viewport(window),
+    imageLoader = new ImageLoader(viewport).init();
+```
+
 #### Performance Considerations for querySelector and querySelectorAll
 
 Every call to `querySelector` or `querySelectorAll` is delegated to
