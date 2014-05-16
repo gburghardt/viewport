@@ -352,16 +352,16 @@ Viewport.prototype = {
 		context = context || this;
 
 		var elements = this.document.body.querySelectorAll(selector),
-		    i = 0, result, matches = [], element;
+		    i = 0, result, matches = [], element, index = 0;
 
 		for (i; i < elements.length; i++) {
 			element = elements[i];
 
 			if (this.contains(element)) {
-				matches.push(element);
+				index = matches.push(element) - 1;
 
 				if (result !== false) {
-					result = callback.call(context, element, i, this);
+					result = callback.call(context, element, index, this);
 				}
 			}
 		}
